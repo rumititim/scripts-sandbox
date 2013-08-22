@@ -1,0 +1,35 @@
+Sub ExportRange()
+Dim FirstCol As Integer
+Dim LastCol As Integer
+Dim C As Integer
+Dim FirstRow
+Dim LastRow
+Dim R
+Dim data
+Dim ExpRng As Range
+'Set actList = Worksheets("Sheet2")
+Sheets(2).Activate
+
+Sheets(2).Range("A1").Select
+    Set ExpRng = ActiveCell.CurrentRegion
+    FirstCol = ExpRng.Columns(1).Column
+    LastCol = FirstCol + ExpRng.Columns.Count - 1
+    FirstRow = ExpRng.Rows(1).Row
+    LastRow = FirstRow + ExpRng.Rows.Count - 1
+
+    Open ThisWorkbook.Path & "\userControl.csv" For Output As #1 ' csv file
+    '''''''Open ThisWorkbook.Path & "\textfile.txt" For Output As #1 '''''or txt file
+        For R = FirstRow To LastRow
+            For C = FirstCol To LastCol
+                data = ExpRng.Cells(R, C).Value
+                If data = "" Then data = ""
+                If IsNumeric(data) Then data = Val(data)
+                If C <> LastCol Then
+                    Write #1, data;
+                Else
+                    Write #1, data
+                End If
+            Next C
+        Next R
+    Close #1
+End Sub

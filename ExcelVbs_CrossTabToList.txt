@@ -1,0 +1,59 @@
+Option Explicit
+
+Sub CrossTabToList()
+
+Dim wsCrossTab As Worksheet
+Dim wsList As Worksheet
+Dim iLastCol As Long
+Dim iLastRow As Long
+Dim iLastRowList As Long
+Dim rngCTab As Range 'Used for range in Sheet1 cross tab sheet
+Dim rngList As Range 'Destination range for the list
+Dim I As Long
+    
+    Set wsCrossTab = Worksheets("Sheet1")
+    Set wsList = Worksheets("Sheet2")
+'Clear all data deom sheet2
+    wsList.Cells.Clear
+'Find the last row in Sheet1 with the cross tab
+    iLastRow = wsCrossTab.Cells(Rows.Count, "A").End(xlUp).Row
+    
+'Set the initial value for the row in the destination worksheet
+    iLastRowList = 2
+    
+'Find the last column in Sheet1 with the cross tab
+    iLastCol = wsCrossTab.Range("A1").End(xlToRight).Column
+    
+'Create a new sheet and set the heading titles
+    wsList.Range("A1:C1") = Array("SERVER", "USERNAME", "ROLENUM")
+    
+'Start looping through the cross tab data
+
+    For I = 2 To iLastRow
+        Set rngCTab = wsCrossTab.Range("A" & I) 'initial value A2
+        Set rngList = wsList.Range("A" & iLastRowList) 'initial value A2
+        
+    'Copy individual names in Col A (A2 initially) into as many rows as there are data columns
+    'in the cross tab (less 1 for Col A).
+        rngCTab.Copy rngList.Resize(iLastCol - 1)
+         
+    'Move up a I rows less one and across one column (using offset function) to select heading row. Copy.
+        rngCTab.Offset(-(I - 1), 1).Resize(, iLastCol - 1).Copy
+        
+    'Paste transpose to columns in the list sheet alongside the names
+        rngList.Offset(0, 1).PasteSpecial Transpose:=True
+        
+    'Staying on same row (2 initially) copy the data from the cross tab
+        rngCTab.Offset(, 1).Resize(, iLastCol - 1).Copy
+        
+    'Past transpose as column in list sheet
+        rngList.Offset(0, 2).PasteSpecial Transpose:=True
+        
+     'Set the new last row in list sheet to be just below the last name copied
+        iLastRowList = iLastRowList + (iLastCol - 1)
+        
+'increment I by 1
+    Next I
+    
+End Sub
+
