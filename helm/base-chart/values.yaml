@@ -1,0 +1,53 @@
+envFromSecretNames: []
+
+image:
+  registry: ""
+  repository: ""
+  tag: ""
+
+serviceAccount:
+  create: true
+
+deployment:
+  enabled: true
+
+service:
+  enabled: true
+
+ingress:
+  enabled: false
+  ingressClassName: ""
+  annotations: {}
+  extraIngress: []
+
+podSecurityContext:
+  runAsUser: 65534
+  runAsGroup: 65534
+  fsGroup: 65534
+
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    memory: 128Mi
+
+configMaps: {}
+
+podAnnotations: {}
+
+externalSecrets: {}
+
+podDisruptionBudget:
+  enabled: false
+
+autoscaling:
+  enabled: false

@@ -1,0 +1,20 @@
+{{- $Global := . }}
+{{- range $configMapName, $configMapContent := .Values.configMaps }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ tpl $configMapName $Global | quote }}
+  labels:
+    {{- include "app.labels" $Global | nindent 4 }}
+  {{- with $configMapContent.annotations }}
+  annotations:
+    {{- tpl . $Global | nindent 4 }}
+  {{- end }}
+{{- if $configMapContent.data }}
+data:
+  {{- with $configMapContent.data }}
+    {{- tpl . $Global | nindent 2 }}
+  {{- end }}
+{{- end }}
+{{- end }}
